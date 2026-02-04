@@ -24,7 +24,7 @@ Install following packages for your distribution :
 - `xbacklight` : read and control device brightness
 
 ### Configure :
-- Get all files from [here](https://github.com/itspatkar/Assets/raw/main/i3wm-config.zip)
+- Get all files from [here](https://github.com/patkarmandar/Assets/raw/main/i3wm-config.zip)
 - Extract it
 - Copy files to `~/.config/`
 - Restart i3 with `mod+Shift+r`

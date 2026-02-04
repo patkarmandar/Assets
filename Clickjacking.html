@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body style="margin: 2rem;">
+    <form onsubmit="f(); return false;">
+        <input id="u" placeholder="https://example.com" style="width:25%;" required>
+        <button type="submit">Check</button>
+    </form>
+
+    <p id="s"></p>
+    <iframe id="i" style="width:75%;height:500px;"></iframe>
+</body>
+<script>
+    function f(){
+        let url=u.value.trim(), i=document.getElementById("i"), s=document.getElementById("s");
+
+        s.innerText="Testing...";
+        i.onload = null;
+        i.src = "about:blank"; // reset iframe first
+
+        setTimeout(()=>{ // small delay before loading target
+            let t=setTimeout(()=>s.innerText="❌ Blocked / Not frameable",6000);
+            i.onload=()=>{ clearTimeout(t); s.innerText="✅ Frameable"; };
+            i.src=url;
+        },200);
+    }
+</script>
+</html>

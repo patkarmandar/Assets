@@ -27,10 +27,70 @@ Headers:
     - Tells the server how the message body is encoded or broken up before it is sent.
     - Transfer-Encoding: chunked means: The body is split into multiple chunks, each with its own length, and ends with a chunk of size 0.
 
-Common Techniques:
-- CL.TE (Content-Length + Transfer-Encoding): Front-end honors Content-Length, back-end honors Transfer-Encoding.
-- TE.CL (Transfer-Encoding + Content-Length): Front-end honors Transfer-Encoding, back-end honors Content-Length.
-- TE.TE (double Transfer-Encoding): Used when different interpretations of multiple Transfer-Encoding headers occur.
+Techniques:
+- CL.TE (Content-Length vs Transfer-Encoding)
+    - What happens:
+        - Front-end uses Content-Length
+        - Back-end uses Transfer-Encoding: chunked
+    - Exploit idea:
+        - An attacker sends both headers.
+        - Each server interprets the request body differently, causing part of it to be treated as a second (smuggled) request.
+    - Example:
+        POST / HTTP/1.1
+        Content-Length: 13
+        Transfer-Encoding: chunked
+
+        0
+
+        GET /admin HTTP/1.1
+- TE.CL (Transfer-Encoding vs Content-Length)
+    - What happens:
+        - Front-end uses Transfer-Encoding: chunked
+        - Back-end uses Content-Length
+    - Exploit idea:
+        - Chunked body ends early for front-end, but back-end keeps reading extra data as another request.
+    - Example:
+        POST / HTTP/1.1
+        Transfer-Encoding: chunked
+        Content-Length: 50
+
+        0
+
+        GET /secret HTTP/1.1
+- TE.TE (Transfer-Encoding confusion)
+    - What happens:
+        - Both servers support Transfer-Encoding, but parse it differently.
+    - Common tricks - Obfuscated headers:
+        - Transfer-Encoding : chunked
+        - Transfer-Encoding: xchunked
+        - Multiple TE headers
+    - Exploit idea:
+        - One server ignores malformed TE, the other accepts it → desync.
+- CL.CL (Multiple Content-Length)
+    - What happens:
+        - Two different Content-Length headers are sent.
+    - Exploit idea:
+        - Front-end uses first value
+        - Back-end uses second value
+        - This mismatch allows hidden request injection.
+    - Example:
+        Content-Length: 10
+        Content-Length: 40
+- HTTP/2 → HTTP/1 Desync Smuggling
+    - Modern variation when:
+        - Client uses HTTP/2
+        - Proxy converts to HTTP/1.1
+    - Differences in:
+        - Header normalization
+        - Line breaks
+        - Length handling
+        - can allow smuggling even without classic CL/TE tricks.
+- Method-based smuggling
+    - Using unusual methods:
+        - HEAD
+        - OPTIONS
+        - TRACE
+    - combined with body handling quirks to desync parsing.
 
 Exploitation Impact:
 - Bypass authentication or WAFs by hiding malicious payloads.

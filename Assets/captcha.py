@@ -9,7 +9,7 @@ import cv2
 from collections import Counter
 import numpy as np
 
-BASE = "https://lg.jio.com"
+BASE = "https://example.com"
 
 URL_SESSION = f"{BASE}/py/session"
 URL_CAPTCHA_META = f"{BASE}/py/getValidCaptcha"
@@ -19,14 +19,14 @@ URL_COMMAND = f"{BASE}/py/commandSend"
 URL_RECV = f"{BASE}/py/recvData"
 
 HEADERS = {
-    "Host": "lg.jio.com",
+    "Host": "example.com",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.5",
     "Accept-Encoding": "gzip, deflate, br",
-    "Origin": "https://lg.jio.com",
+    "Origin": "https://example.com",
     "Sec-Gpc": "1",
-    "Referer": "https://lg.jio.com/",
+    "Referer": "https://example.com/",
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
